@@ -1,6 +1,13 @@
 <?php
 
 class HomeController extends Controller {
+    
+    private $user;
+    
+    public function __construct() {
+        $this->user = new UserModel();
+    }
+    
     public function index(Request $request) {
         $this->loadView('home');
     }
