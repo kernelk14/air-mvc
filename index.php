@@ -3,6 +3,7 @@
 define('APP_DIR', __DIR__ . '/app/');
 define('CONFIG_DIR', __DIR__ . '/config/');
 define('CORE_DIR', __DIR__ . '/core/');
+define('ASSETS_DIR', __DIR__ . '/assets/');
 
 spl_autoload_register(function ($className) {
     $controllerFile = APP_DIR . 'controllers/' . $className . '.php';

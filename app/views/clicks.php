@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Click Result</title>
+        
     </head>
     <body>
         <h1>Result</h1>
