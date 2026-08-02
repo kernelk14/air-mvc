@@ -11,6 +11,18 @@ class Router {
     public function post(string $path, $handler) {
         $this->routes['POST'][$path] = $handler;
     }
+
+    public function put(string $path, $handler) {
+        $this->routes['PUT'][$path] = $handler;
+    }
+    
+    public function patch(string $path, $handler) {
+        $this->routes['PATCH'][$path] = $handler;
+    }
+
+    public function delete(string $path, $handler) {
+        $this->routes['delete'][$path] = $handler;
+    }
     
     public function dispatch() {
         $method = $_SERVER['REQUEST_METHOD'];
