@@ -1,5 +1,5 @@
 <?php
-// Thank you AI (duck.ai) for helping me with this one.
+// Thank you AI (duck.ai) for helping me with this one. 
 define('APP_DIR', __DIR__ . '/app/');
 define('CONFIG_DIR', __DIR__ . '/config/');
 define('CORE_DIR', __DIR__ . '/core/');
