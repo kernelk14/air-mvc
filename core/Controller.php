@@ -18,5 +18,17 @@ abstract class Controller {
             echo "View `$viewFile` not found.";
         }
     }
+    
+    public function redirect($path) {
+        header("Location: $path");
+        exit();
+    }
+    
+    public function jsonResponse($data, $statusCode = 200) {
+        http_response_code($statusCode);
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit();
+    }
         
 }
