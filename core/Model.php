@@ -40,15 +40,15 @@ abstract class Model {
     
     public function find(array $data) {
         $spec_key = array_keys($data);
-        $spec_val = $data[$spec_key];
+        $spec_val = $data[$spec_key[0]];
         try {
-            $query = "SELECT * FROM {$this->tableName} WHERE {$spec_key} = ?";
+            $query = "SELECT * FROM {$this->tableName} WHERE {$spec_key[0]} = ?";
             $this->result = $this->conn->prepare($query);
             $this->result->execute([$spec_val]);
             
             return $this->result->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            echo "Cannot fetch contents of $spec_key: " . $e->getMessage();
+            echo "Cannot fetch contents of {$spec_key[0]}: " . $e->getMessage();
         }
     }
     
