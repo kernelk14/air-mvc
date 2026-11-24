@@ -7,6 +7,7 @@ namespace Air\Exceptions;
 use Air\Application;
 use Air\Http\Request;
 use Air\Http\Response;
+use Air\Log\Logger;
 use Throwable;
 
 class Handler
@@ -21,6 +22,12 @@ class Handler
         $headers = $e instanceof HttpException ? $e->getHeaders() : [];
         $message = $e->getMessage() !== '' ? $e->getMessage() : 'Server Error';
         $debug = $this->app->isDebug();
+
+        if ($status >= 500 && $this->app->has(Logger::class)) {
+            /** @var Logger $logger */
+            $logger = $this->app->make(Logger::class);
+            $logger->error($message, ['exception' => get_class($e), 'file' => $e->getFile(), 'line' => $e->getLine()]);
+        }
 
         if ($request->expectsJson() || $request->isJson()) {
             $payload = [

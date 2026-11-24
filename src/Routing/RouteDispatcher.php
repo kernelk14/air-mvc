@@ -149,7 +149,13 @@ final class RouteDispatcher
             if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                 $typeName = $type->getName();
                 if ($typeName === Request::class || is_a($typeName, Request::class, true)) {
-                    $args[] = $request;
+                    if ($typeName !== Request::class && is_a($typeName, \Air\Http\FormRequest::class, true)) {
+                        /** @var \Air\Http\FormRequest $form */
+                        $form = new $typeName($request->query(), $request->post(), $request->cookies(), $request->files(), $request->server(), $request->json(), $request->content());
+                        $args[] = $form;
+                    } else {
+                        $args[] = $request;
+                    }
                     $usedRequest = true;
                     continue;
                 }

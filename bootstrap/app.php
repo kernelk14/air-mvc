@@ -9,6 +9,7 @@ use Air\Database\Connection;
 use Air\Database\Migrations\Migrator;
 use Air\Exceptions\Handler;
 use Air\Http\Kernel;
+use Air\Log\Logger;
 use Air\Routing\RouteCollection;
 use Air\Routing\Router;
 use Air\Security\Csrf;
@@ -34,6 +35,7 @@ foreach (['app', 'database'] as $file) {
 date_default_timezone_set((string) $config->get('app.timezone', 'UTC'));
 
 $app->singleton(Repository::class, fn () => $config);
+$app->singleton(Logger::class, fn (Application $app) => new Logger($app->basePath('storage/logs/air.log')));
 $app->singleton(SessionManager::class, fn () => new SessionManager());
 $app->singleton(Csrf::class, fn (Application $app) => new Csrf($app->make(SessionManager::class)));
 $app->singleton(AuthManager::class, fn (Application $app) => new AuthManager($app->make(SessionManager::class)));

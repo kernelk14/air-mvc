@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Air\Http;
 
-final class Request
+class Request
 {
     /**
      * @param array<string,mixed> $query

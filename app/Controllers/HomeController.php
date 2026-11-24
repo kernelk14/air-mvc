@@ -7,6 +7,7 @@ namespace App\Controllers;
 use Air\Http\Controller;
 use Air\Http\Request;
 use Air\Http\Response;
+use App\Requests\ClickRequest;
 
 class HomeController extends Controller
 {
@@ -15,9 +16,10 @@ class HomeController extends Controller
         return $this->view('home', ['title' => 'The First MVC']);
     }
 
-    public function clickBtn(Request $request): Response
+    public function clickBtn(ClickRequest $request): Response
     {
-        $message = (string) $request->input('enter', 'Probably null');
+        $data = $request->validated();
+        $message = (string) ($data['enter'] ?? '');
 
         return $this->view('clicks', ['message' => $message]);
     }

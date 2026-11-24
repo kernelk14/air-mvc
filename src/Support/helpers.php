@@ -139,3 +139,12 @@ if (!function_exists('route')) {
         return $router->route($name, $params);
     }
 }
+
+if (!function_exists('logger')) {
+    function logger(): \Air\Log\Logger
+    {
+        /** @var \Air\Log\Logger $logger */
+        $logger = app(\Air\Log\Logger::class);
+        return $logger;
+    }
+}

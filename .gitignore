@@ -9,3 +9,5 @@
 Thumbs.db
 composer.lock
 /.phpunit.cache/
+
+/storage/
