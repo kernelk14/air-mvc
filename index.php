@@ -1,19 +1,25 @@
 <?php
-// Thank you AI (duck.ai) for helping me with this one. 
-define('APP_DIR', __DIR__ . '/app/');
-define('CONFIG_DIR', __DIR__ . '/config/');
-define('CORE_DIR', __DIR__ . '/core/');
-define('ASSETS_DIR', __DIR__ . '/assets/');
 
-spl_autoload_register(function ($className) {
-    $controllerFile = APP_DIR . 'controllers/' . $className . '.php';
-    $modelFile = APP_DIR . 'models/' . $className . '.php';
-    $coreFile = CORE_DIR . '/' . $className . '.php';
-    
-    if (file_exists($controllerFile)) require_once $controllerFile; 
-    if (file_exists($modelFile)) require_once $modelFile;
-    if (file_exists($coreFile)) require_once $coreFile; 
-});
+declare(strict_types=1);
 
-require_once CONFIG_DIR . 'Routes.php';
-$router->dispatch();
+if (PHP_SAPI === 'cli-server') {
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $file = __DIR__ . (is_string($path) ? $path : '/');
+    if (is_file($file)) {
+        return false;
+    }
+}
+
+use Air\Http\Request;
+
+require __DIR__ . '/vendor/autoload.php';
+
+/** @var \Air\Application $app */
+$app = require __DIR__ . '/bootstrap/app.php';
+
+/** @var \Air\Http\Kernel $kernel */
+$kernel = $app->make(\Air\Http\Kernel::class);
+
+$request = Request::capture();
+$response = $kernel->handle($request);
+$response->send();

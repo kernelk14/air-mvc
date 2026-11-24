@@ -1,6 +1,18 @@
-<IfModule mod_rewrite.c>
+﻿<IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /
+
+    # Deny sensitive files/directories
+    RewriteRule (^|/)\.(env|git)(/|$) - [F,L]
+    RewriteRule (^|/)(vendor|src|app|config|bootstrap|tests|bin)(/|$) - [F,L]
+    RewriteRule (^|/)(composer\.(json|lock)|phpunit\.xml|phpstan\.neon\.dist|\.php-cs-fixer\.dist\.php|README\.md|UPGRADE\.md)$ - [F,L]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php [QSA,L]
+    RewriteRule ^ index.php [QSA,L]
 </IfModule>
+
+# Fallback deny rules for Apache without mod_rewrite context issues
+<FilesMatch "^(\.env|composer\.(json|lock)|phpunit\.xml|phpstan\.neon\.dist|\.php-cs-fixer\.dist\.php)$">
+    Require all denied
+</FilesMatch>

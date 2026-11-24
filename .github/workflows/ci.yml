@@ -1,0 +1,28 @@
+﻿name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['8.2', '8.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: Validate composer
+        run: composer validate --strict
+      - name: Check formatting
+        run: composer format:check
+      - name: Static analysis
+        run: composer analyse
+      - name: Tests
+        run: composer test
