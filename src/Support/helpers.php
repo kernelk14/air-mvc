@@ -148,3 +148,29 @@ if (!function_exists('logger')) {
         return $logger;
     }
 }
+
+if (!function_exists('session')) {
+    function session(): \Air\Session\SessionManager
+    {
+        /** @var \Air\Session\SessionManager $s */
+        $s = app(\Air\Session\SessionManager::class);
+        return $s;
+    }
+}
+
+if (!function_exists('old')) {
+    function old(string $key, mixed $default = ''): mixed
+    {
+        $old = session()->oldInput();
+        return $old[$key] ?? $default;
+    }
+}
+
+if (!function_exists('errors')) {
+    /** @return array<string,array<int,string>> */
+    function errors(): array
+    {
+        $e = session()->getFlash('_errors', []);
+        return is_array($e) ? $e : [];
+    }
+}

@@ -16,7 +16,7 @@ abstract class FormRequest extends Request
     {
         $validator = Validator::make($this->all(), $this->rules());
         if ($validator->fails()) {
-            throw new \Air\Exceptions\HttpException(422, json_encode(['errors' => $validator->errors()], JSON_UNESCAPED_SLASHES) ?: 'Validation failed');
+            throw new \Air\Validation\ValidationException($validator->errors());
         }
         return $validator->validated();
     }

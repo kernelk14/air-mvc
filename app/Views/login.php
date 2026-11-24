@@ -24,13 +24,17 @@
                         <p>Sign in to the demo app.</p>
                     </hgroup>
                 </header>
+                <?php $errs = errors();
+        if (!empty($errs)): ?>
+                    <article aria-label="Validation errors"><ul><?php foreach ($errs as $field => $messages): foreach ($messages as $msg): ?><li><?= e($field . ': ' . $msg) ?></li><?php endforeach; endforeach; ?></ul></article>
+                <?php endif; ?>
                 <?php if (!empty($error)): ?>
                     <p><mark><?= e($error) ?></mark></p>
                 <?php endif; ?>
                 <form method="POST" action="/login">
                     <?= csrf_field() ?>
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+                    <input type="email" id="email" name="email" value="<?= e((string) old('email')) ?>" placeholder="you@example.com" autocomplete="email" required />
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" required />
                     <button type="submit">Sign in</button>

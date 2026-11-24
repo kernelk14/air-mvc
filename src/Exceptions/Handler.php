@@ -8,6 +8,8 @@ use Air\Application;
 use Air\Http\Request;
 use Air\Http\Response;
 use Air\Log\Logger;
+use Air\Session\SessionManager;
+use Air\Validation\ValidationException;
 use Throwable;
 
 class Handler
@@ -18,6 +20,17 @@ class Handler
 
     public function render(Request $request, Throwable $e): Response
     {
+        if ($e instanceof ValidationException && !($request->expectsJson() || $request->isJson())) {
+            if ($this->app->has(SessionManager::class)) {
+                /** @var SessionManager $session */
+                $session = $this->app->make(SessionManager::class);
+                $session->flash('_errors', $e->errors());
+                $session->flashInput($request->post());
+            }
+            $target = $request->header('referer', '/');
+            return (new Response('', 302, ['Location' => $target]))->withStatus(302);
+        }
+
         $status = $e instanceof HttpException ? $e->getStatusCode() : 500;
         $headers = $e instanceof HttpException ? $e->getHeaders() : [];
         $message = $e->getMessage() !== '' ? $e->getMessage() : 'Server Error';
