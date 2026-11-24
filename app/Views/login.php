@@ -21,14 +21,18 @@
                 <header>
                     <hgroup>
                         <h1>Welcome back</h1>
-                        <p>This demo route is ready for your auth flow in the next milestone.</p>
+                        <p>Sign in to the demo app.</p>
                     </hgroup>
                 </header>
-                <form>
+                <?php if (!empty($error)): ?>
+                    <p><mark><?= e($error) ?></mark></p>
+                <?php endif; ?>
+                <form method="POST" action="/login">
+                    <?= csrf_field() ?>
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" />
+                    <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required />
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" />
+                    <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" required />
                     <button type="submit">Sign in</button>
                 </form>
             </article>

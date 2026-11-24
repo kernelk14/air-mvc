@@ -58,7 +58,7 @@ final class DemoRoutesTest extends TestCase
 
     public function test405(): void
     {
-        $res = $this->dispatch('POST', '/login');
+        $res = $this->dispatch('PUT', '/login');
         $this->assertSame(405, $res->status());
     }
 }
