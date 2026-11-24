@@ -31,11 +31,12 @@
                 <article>
                     <header><strong>Try the request flow</strong></header>
                     <p>Submit a value through the POST route and see it rendered by the controller.</p>
-                    <form method="POST" action="/click">
-                        <label for="enter">Message</label>
-                        <input type="text" id="enter" name="enter" placeholder="Type something..." autocomplete="off" />
-                        <button type="submit">Send Request</button>
-                    </form>
+            <form method="POST" action="/click">
+                <?= csrf_field() ?>
+                <label for="enter">Message</label>
+                <input type="text" id="enter" name="enter" placeholder="Type something..." autocomplete="off" />
+                <button type="submit">Send Request</button>
+            </form>
                 </article>
                 <article>
                     <header><strong>Core features</strong></header>

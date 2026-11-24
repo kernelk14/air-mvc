@@ -20,6 +20,20 @@ final class Router
         return $this->routes;
     }
 
+    /** @param array<string,string|int> $params */
+    public function route(string $name, array $params = []): string
+    {
+        $route = $this->routes->getByName($name);
+        if ($route === null) {
+            throw new \InvalidArgumentException("Route [{$name}] not found.");
+        }
+        $uri = $route->uri;
+        foreach ($params as $key => $value) {
+            $uri = preg_replace('/\{' . preg_quote((string) $key, '/') . '\}/', (string) $value, $uri) ?? $uri;
+        }
+        return $uri;
+    }
+
     public function get(string $uri, mixed $action): Route
     {
         return $this->add(['GET'], $uri, $action);

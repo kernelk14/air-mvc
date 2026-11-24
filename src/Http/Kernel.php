@@ -12,10 +12,23 @@ use Throwable;
 final class Kernel
 {
     /** @var array<int, string|callable|object> */
-    private array $middleware = [];
+    private array $middleware = [
+        \Air\Http\Middleware\StartSession::class,
+    ];
+
+    /** @var array<string, class-string> */
+    private array $middlewareAliases = [
+        'csrf' => \Air\Http\Middleware\VerifyCsrfToken::class,
+        'auth' => \Air\Http\Middleware\Authenticate::class,
+    ];
 
     public function __construct(private Application $app, private Handler $handler)
     {
+    }
+
+    public function resolveMiddleware(string $name): string
+    {
+        return $this->middlewareAliases[$name] ?? $name;
     }
 
     public function handle(Request $request): Response

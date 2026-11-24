@@ -29,6 +29,18 @@ class Route
     public function name(string $name): self
     {
         $this->name = $name;
+        $router = null;
+        try {
+            $app = \Air\Application::getInstance();
+            if ($app->has(\Air\Routing\Router::class)) {
+                $router = $app->make(\Air\Routing\Router::class);
+            }
+        } catch (\Throwable) {
+            $router = null;
+        }
+        if ($router instanceof \Air\Routing\Router) {
+            $router->routes()->addNamed($this);
+        }
 
         return $this;
     }

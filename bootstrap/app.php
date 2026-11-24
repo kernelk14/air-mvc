@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Air\Application;
+use Air\Auth\AuthManager;
 use Air\Config\Repository;
 use Air\Database\Connection;
 use Air\Database\Migrations\Migrator;
@@ -10,6 +11,8 @@ use Air\Exceptions\Handler;
 use Air\Http\Kernel;
 use Air\Routing\RouteCollection;
 use Air\Routing\Router;
+use Air\Security\Csrf;
+use Air\Session\SessionManager;
 use Air\Support\Env;
 use Air\View\ViewFactory;
 
@@ -31,6 +34,9 @@ foreach (['app', 'database'] as $file) {
 date_default_timezone_set((string) $config->get('app.timezone', 'UTC'));
 
 $app->singleton(Repository::class, fn () => $config);
+$app->singleton(SessionManager::class, fn () => new SessionManager());
+$app->singleton(Csrf::class, fn (Application $app) => new Csrf($app->make(SessionManager::class)));
+$app->singleton(AuthManager::class, fn (Application $app) => new AuthManager($app->make(SessionManager::class)));
 $app->singleton(Connection::class, fn (Application $app) => new Connection($app->make(Repository::class)));
 $app->singleton(Migrator::class, fn (Application $app) => new Migrator($app, $app->make(Connection::class)));
 $app->singleton(RouteCollection::class, fn () => new RouteCollection());

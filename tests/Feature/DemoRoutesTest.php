@@ -44,7 +44,8 @@ final class DemoRoutesTest extends TestCase
 
     public function testClickPost(): void
     {
-        $res = $this->dispatch('POST', '/click', ['enter' => 'hello']);
+        $token = csrf_token();
+        $res = $this->dispatch('POST', '/click', ['enter' => 'hello', '_token' => $token]);
         $this->assertSame(200, $res->status());
         $this->assertStringContainsString('hello', $res->content());
     }

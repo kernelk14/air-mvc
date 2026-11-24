@@ -9,11 +9,17 @@ final class RouteCollection
     /** @var array<string, array<int, Route>> */
     private array $routes = [];
 
+    /** @var array<string, Route> */
+    private array $named = [];
+
     public function add(Route $route): Route
     {
         foreach ($route->methods as $method) {
             $method = strtoupper($method);
             $this->routes[$method][] = $route;
+        }
+        if ($route->name !== null) {
+            $this->named[$route->name] = $route;
         }
 
         return $route;
@@ -30,6 +36,18 @@ final class RouteCollection
         }
 
         return array_values($all);
+    }
+
+    public function getByName(string $name): ?Route
+    {
+        return $this->named[$name] ?? null;
+    }
+
+    public function addNamed(Route $route): void
+    {
+        if ($route->name !== null) {
+            $this->named[$route->name] = $route;
+        }
     }
 
     /** @return array<int, Route> */

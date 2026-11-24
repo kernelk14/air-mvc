@@ -54,7 +54,14 @@ final class RouteDispatcher
             return $this->toResponse($result);
         };
 
-        $middleware = $route->middleware;
+        $middleware = array_map(function (mixed $mw): mixed {
+            if (is_string($mw) && $this->app->has(\Air\Http\Kernel::class)) {
+                /** @var \Air\Http\Kernel $kernel */
+                $kernel = $this->app->make(\Air\Http\Kernel::class);
+                return $kernel->resolveMiddleware($mw);
+            }
+            return $mw;
+        }, $route->middleware);
         $pipeline = array_reduce(
             array_reverse($middleware),
             function (Closure $next, mixed $mw): Closure {

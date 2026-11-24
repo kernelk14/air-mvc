@@ -113,3 +113,29 @@ if (!function_exists('e')) {
         return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 }
+
+if (!function_exists('csrf_token')) {
+    function csrf_token(): string
+    {
+        /** @var \Air\Security\Csrf $csrf */
+        $csrf = app(\Air\Security\Csrf::class);
+        return $csrf->token();
+    }
+}
+
+if (!function_exists('csrf_field')) {
+    function csrf_field(): string
+    {
+        return '<input type="hidden" name="_token" value="' . e(csrf_token()) . '">';
+    }
+}
+
+if (!function_exists('route')) {
+    /** @param array<string,string|int> $params */
+    function route(string $name, array $params = []): string
+    {
+        /** @var \Air\Routing\Router $router */
+        $router = app(\Air\Routing\Router::class);
+        return $router->route($name, $params);
+    }
+}
