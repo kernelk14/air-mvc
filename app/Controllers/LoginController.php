@@ -20,8 +20,9 @@ class LoginController extends Controller
     public function store(LoginRequest $request, AuthManager $auth): Response
     {
         $data = $request->validated();
-        // Demo auth: accept any valid email/password; M-next should use DB users + password_hash.
-        $auth->login($data['email']);
+        if (!$auth->attempt((string) $data['email'], (string) $data['password'])) {
+            return $this->view('login', ['title' => 'Login to MVC testing', 'error' => 'Invalid credentials.']);
+        }
 
         return $this->redirect('/');
     }

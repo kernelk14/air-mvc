@@ -4,12 +4,30 @@ declare(strict_types=1);
 
 namespace Air\Auth;
 
+use Air\Database\Connection;
 use Air\Session\SessionManager;
 
 final class AuthManager
 {
-    public function __construct(private SessionManager $session)
+    public function __construct(private SessionManager $session, private ?Connection $db = null)
     {
+    }
+
+    public function attempt(string $email, string $password, string $table = 'users'): bool
+    {
+        if ($this->db === null) {
+            return false;
+        }
+        $user = $this->db->table($table)->where('email', '=', $email)->first();
+        if ($user === null) {
+            return false;
+        }
+        $hash = (string) ($user['password'] ?? '');
+        if ($hash === '' || !password_verify($password, $hash)) {
+            return false;
+        }
+        $this->login($user['id'] ?? null);
+        return true;
     }
 
     public function check(): bool
